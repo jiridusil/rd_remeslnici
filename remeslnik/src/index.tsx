@@ -5,11 +5,7 @@ import { HomePage } from './pages/HomePage';
 import { ProfilePage } from './pages/ProfilePage';
 import { TopHeader } from './components/Layout';
 import { AddContractor } from './components/AddContractor';
-import { AddContractorPage } from './pages/AddContractor';
-
-// const root = ReactDOM.createRoot(
-//   document.getElementById('root') as HTMLElement
-// );
+import { Write } from './components/Write';
 
 const router = createBrowserRouter([
   {
@@ -23,6 +19,9 @@ const router = createBrowserRouter([
       {
         path: '/add-contractor',
         element: <AddContractor />
+      },
+      { path:'/simple-insert',
+        element: <Write />
       }
     ]
   }
@@ -40,12 +39,6 @@ if (rootElement) {
 } else {
   console.error('Root element not found');
 }
-
-// root.render(
-//   <React.StrictMode>
-//     <RouterProvider router={router} />
-//   </React.StrictMode>
-// );
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
