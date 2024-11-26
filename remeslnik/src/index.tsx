@@ -2,10 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { HomePage } from './pages/HomePage';
-import { ProfilePage } from './pages/ProfilePage';
 import { TopHeader } from './components/Layout';
 import { AddContractor } from './components/AddContractor';
 import { Write } from './components/Write';
+import { ContractorListPage } from './pages/ContractorListPage';
 
 const router = createBrowserRouter([
   {
@@ -14,7 +14,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <ProfilePage />
+        element: <ContractorListPage />
       },
       {
         path: '/add-contractor',
@@ -22,6 +22,10 @@ const router = createBrowserRouter([
       },
       { path:'/simple-insert',
         element: <Write />
+      },
+      {
+        path: '/contractors',
+        element: <ContractorListPage />
       }
     ]
   }

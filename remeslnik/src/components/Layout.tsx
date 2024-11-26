@@ -10,11 +10,10 @@ const { Header, Content, Footer } = Layout;
 // }));
 
 const items = [
-  {    key: 1, label: 'Domů' , href: '/' },
+  {    key: 1, label: 'Seznam řemeslníků' , href: '/contractors' },
   {    key: 2, label: 'Přidat řemeslníka', href: '/add-contractor'  },
   {    key: 3, label: 'Simple insert', href: '/simple-insert'  },
-  {    key: 4, label: 'Seznam řemeslníků', href: '/contractors'  },
-  {    key: 5, label: 'Kontakt', href: '/contact'  },
+  {    key: 4, label: 'Kontakt', href: '/contact'  },
 ]
 
 export const TopHeader: React.FC = () => {
@@ -29,7 +28,7 @@ export const TopHeader: React.FC = () => {
         <Menu
           theme="dark"
           mode="horizontal"
-          defaultSelectedKeys={['2']}
+          defaultSelectedKeys={['1']}
           style={{ flex: 1, minWidth: 0 }}
         >
           {items.map((item) => (
