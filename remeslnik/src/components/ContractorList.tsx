@@ -1,94 +1,149 @@
-import React from 'react';
-import { Space, Table, Tag } from 'antd';
-import type { TableProps } from 'antd';
+import React, { useEffect } from 'react';
+import { Button, Table, Tag } from 'antd';
+import type { TableColumnsType } from 'antd';
+import { createStyles } from 'antd-style';
+import { ContractorContextType, ContractorFields } from './types/ContractorContextType';
+import { get, getDatabase, ref, remove } from 'firebase/database';
+import { app } from '../firebaseConfig';
 
-interface DataType {
-  key: string;
-  name: string;
-  address: string;
-  range: number;
-  tags: string[];
-}
+const useStyle = createStyles(({ css }) => {
+  return {
+    customTable: css`
+      .ant-table {
+        .ant-table-container {
+          .ant-table-body,
+          .ant-table-content {
+            scrollbar-width: thin;
+            scrollbar-color: #eaeaea transparent;
+            scrollbar-gutter: stable;
+          }
+        }
+      }
+    `,
+  };
+});
 
-const columns: TableProps<DataType>['columns'] = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: 'Range (km)',
-    dataIndex: 'range',
-    key: 'range',
-  },
-  {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
-  },
-  {
-    title: 'Tags',
-    key: 'tags',
-    dataIndex: 'tags',
-    render: (_, { tags }) => (
-      <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? 'geekblue' : 'green';
-          if (tag === 'zednickePrace') {
-            color = 'volcano';
-          }
-          else if (tag === 'malirstvi') {
-            color = 'green';
-          } else if (tag === 'stolarskePrace') {
-            color = 'yellow';
-          }
-          else if (tag === 'obkladacstvi') {
-            color = 'cyan';
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
+
+
+export const ContractorList: React.FC = () => {
+  const [data, setData] = React.useState<ContractorContextType[]>([]);
+
+  const columns: TableColumnsType<ContractorFields> = [
+    {
+      title: 'Jméno',
+      dataIndex: 'firstName',
+      key: 'firstName',
+    },
+    {
+      title: 'Příjmení',
+      dataIndex: 'lastName',
+      key: 'lastName',
+    },
+    {
+      title: 'Oblasti',
+      dataIndex: 'fields',
+      key: 'fields',
+      render: (fields) => (
+        <>
+          {fields.map((field: string) => (
+            <Tag color="blue" key={field}>
+              {field.toUpperCase()}
             </Tag>
-          );
-        })}
-      </>
-    ),
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    render: (_, record) => (
-      <Space size="middle">
-        <a>Invite {record.name}</a>
-        <a>Delete</a>
-      </Space>
-    ),
-  },
-];
+          ))}
+        </>
+      ),
+    },
+    {
+      title: 'Pracuji o víkendech',
+      dataIndex: 'weekends',
+      key: 'weekends',
+      render: (weekends) => (weekends ? 'Ano' : 'Ne'),
+    },
+    {
+      title: 'Město',
+      dataIndex: 'city',
+      key: 'city',
+    },
+    {
+      title: 'PSČ',
+      dataIndex: 'zip',
+      key: 'zip',
+    },
+    {
+      title: 'Pracuji v okolí (km)',
+      dataIndex: 'range',
+      key: 'range',
+    },
+    {
+      title: 'Akce',
+      key: 'id',
+      render: (_, record) => (
+        <Button color="danger" variant="filled" onClick={() => deleteData(record.id)} >
+          <a>Delete</a>
+        </Button>
+      ),
+    },
+  ];
 
-const data: DataType[] = [
-  {
-    key: '1',
-    name: 'John Brown',
-    range: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['zednickePrace'],
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    range: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    range: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['stolarskePrace', 'teacher'],
-  },
-];
+  useEffect(() => {
+    const fetchData = async () => {
+      const contractorsRaw = await readData();
+      if (contractorsRaw) {
+        setData(contractorsRaw as ContractorContextType[]);
+      }
+    };
 
-export const ContractorList: React.FC = () => <Table<DataType> columns={columns} dataSource={data} />;
+    fetchData();
+  }, []);
+
+  const dataSource = data.map((contractor) => ({
+    id: contractor.id,
+    firstName: contractor.firstName,
+    lastName: contractor.lastName,
+    fields: contractor.fields ? contractor.fields : [],
+    weekends: contractor.weekends,
+    city: contractor.city,
+    zip: contractor.zip,
+    range: contractor.range,
+  }));
+
+  const readData = async () => {
+    const db = getDatabase(app);
+    const contractorRef = ref(db, 'remeslnik/');
+    const snapshot = await get(contractorRef);
+    if (snapshot.exists()) {
+      const val = snapshot.val();
+      const jsonData = Object.values(val);
+      console.log('jsonData', jsonData);
+      return jsonData;
+    } else {
+      console.log('No data available');
+    }
+  }
+
+  const deleteData = async (id: string) => {
+    const db = getDatabase(app);
+    await remove(ref(db, `remeslnik/${id}`));
+    const contractorsRaw = await readData();
+    if (contractorsRaw) {
+      setData(contractorsRaw as ContractorContextType[]);
+    }
+  }
+
+  const { styles } = useStyle();
+  return (
+    <>
+      <h1>Seznam řemeslníků</h1>
+      <Table<ContractorFields>
+        className={styles.customTable}
+        columns={columns}
+        dataSource={dataSource}
+
+        pagination={{ pageSize: 10, position: ['bottomRight'] }}
+      // scroll={{ y: 55 * 5 }}
+      />
+    </>
+
+  );
+};
+

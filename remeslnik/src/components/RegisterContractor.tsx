@@ -1,23 +1,23 @@
 import { getDatabase, ref, set, push } from "firebase/database";
 import { app } from "../firebaseConfig";
 import { useState } from "react";
-import { Bounce, ToastContainer, toast } from "react-toastify";
+import { Slide, ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-export const Write = () => {
+export const SaveData = () => {
     const [value1, setValue1] = useState('');
     const [value2, setValue2] = useState('');
 
     const notify = () => toast.success("Data saved!", {
         position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
+        autoClose: 2000,
+        hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
         theme: "light",
-        transition: Bounce,
+        transition: Slide,
 
     });
 

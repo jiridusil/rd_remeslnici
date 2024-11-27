@@ -2,6 +2,7 @@ import React from 'react';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import { Link, Outlet } from 'react-router-dom';
 
+
 const { Header, Content, Footer } = Layout;
 
 // const items = new Array(5).fill(null).map((_, index) => ({
@@ -10,10 +11,9 @@ const { Header, Content, Footer } = Layout;
 // }));
 
 const items = [
-  {    key: 1, label: 'Seznam řemeslníků' , href: '/contractors' },
-  {    key: 2, label: 'Přidat řemeslníka', href: '/add-contractor'  },
-  {    key: 3, label: 'Simple insert', href: '/simple-insert'  },
-  {    key: 4, label: 'Kontakt', href: '/contact'  },
+  { key: 1, label: 'Seznam řemeslníků', href: '/' },
+  { key: 2, label: 'Přidat řemeslníka', href: '/add-contractor' },
+  { key: 3, label: 'Kontakt', href: '/contact' },
 ]
 
 export const TopHeader: React.FC = () => {
@@ -39,11 +39,6 @@ export const TopHeader: React.FC = () => {
         </Menu>
       </Header>
       <Content style={{ padding: '0 48px' }}>
-        <Breadcrumb style={{ margin: '16px 0' }}>
-          <Breadcrumb.Item>Domů</Breadcrumb.Item>
-          <Breadcrumb.Item>List</Breadcrumb.Item>
-          <Breadcrumb.Item>App</Breadcrumb.Item>
-        </Breadcrumb>
         <div
           style={{
             background: colorBgContainer,
@@ -52,11 +47,13 @@ export const TopHeader: React.FC = () => {
             borderRadius: borderRadiusLG,
           }}
         >
-          <Outlet />
+          <main style={{ minHeight: 'calc(100vh - 200px)', padding: '32px 0' }}>
+            <Outlet />
+          </main>
         </div>
       </Content>
       <Footer style={{ textAlign: 'center' }}>
-        Tady bude patička.....Řemeslník ©{new Date().getFullYear()} Created by Jiří Dušil
+        ©{new Date().getFullYear()} Created by Jiří Dušil
       </Footer>
     </Layout>
   );

@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { HomePage } from './pages/HomePage';
 import { TopHeader } from './components/Layout';
 import { AddContractor } from './components/AddContractor';
-import { Write } from './components/Write';
 import { ContractorListPage } from './pages/ContractorListPage';
+import { ContractorProvider } from './components/ContractorContext';
+import { ContactPage } from './pages/ContactPage';
 
 const router = createBrowserRouter([
   {
@@ -20,12 +20,9 @@ const router = createBrowserRouter([
         path: '/add-contractor',
         element: <AddContractor />
       },
-      { path:'/simple-insert',
-        element: <Write />
-      },
-      {
-        path: '/contractors',
-        element: <ContractorListPage />
+      { 
+        path: '/contact',
+        element: <ContactPage />
       }
     ]
   }
@@ -37,7 +34,10 @@ if (rootElement) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <React.StrictMode>
-      <RouterProvider router={router} />
+      <ContractorProvider>
+        <RouterProvider router={router} />
+      </ContractorProvider>
+
     </React.StrictMode>
   );
 } else {
