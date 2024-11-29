@@ -16,7 +16,7 @@ export type ContractorContextType = {
     lastName: string;
     setLastName: (lastName: string) => void;
     fields: string[];
-    setField: (field: string[]) => void;
+    setFields: (field: string[]) => void;
     weekends: boolean;
     setWeekends: (weekends: boolean) => void;
     city: string;

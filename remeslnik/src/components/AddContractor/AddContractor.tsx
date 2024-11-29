@@ -5,9 +5,9 @@ import {
 } from 'antd';
 import type { FormProps } from 'antd';
 import { getDatabase, ref, set, push } from "firebase/database";
-import { app } from "../firebaseConfig";
+import { app } from "../../firebaseConfig";
 import { ToastContainer } from 'react-toastify';
-import { ContractorContextType, ContractorFields } from './types/ContractorContextType';
+import { ContractorContextType, ContractorFields } from '../types/ContractorContextType';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
 
 const normFile = (e: any) => {

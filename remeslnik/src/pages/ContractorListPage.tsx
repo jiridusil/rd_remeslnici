@@ -1,4 +1,4 @@
-import { ContractorList } from "../components/ContractorList"
+import { ContractorList } from "../components/ContractorList";
 
 export const ContractorListPage = () => {
     return ( 
