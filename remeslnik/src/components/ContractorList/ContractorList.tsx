@@ -1,17 +1,20 @@
-import React, { useEffect } from "react";
-import { Button, Table, Tag } from "antd";
+import React, { useContext, useEffect, useState } from "react";
+import { Button, ConfigProvider, Table, Tag, theme } from "antd";
 import type { TableColumnsType } from "antd";
 import {
   ContractorContextType,
   ContractorFields,
 } from "../types/ContractorContextType";
-import { get, getDatabase, ref, remove, set } from "firebase/database";
+import { getDatabase, ref, remove, set } from "firebase/database";
 import { app } from "../../firebaseConfig";
 import { tableStyle } from "../../styles";
 import { readData } from "../Dto";
+import { ThemeContext } from "../ThemeContext";
 
 export const ContractorList: React.FC = () => {
   const [data, setData] = React.useState<ContractorContextType[]>([]);
+  const { themeWrapper } = useContext(ThemeContext);
+  const [hover, setHover] = useState<string | null>(null);
 
   const columns: TableColumnsType<ContractorFields> = [
     {
@@ -76,13 +79,21 @@ export const ContractorList: React.FC = () => {
     {
       title: "Akce",
       key: "id",
-      render: (_, record) => (
+      render: (_, data) => (
         <Button
           color="danger"
+          style={{
+            background: themeWrapper === "dark" ? "darkred" : "#ff4d4f",
+            color: themeWrapper === "dark" ? "white" : "black",
+            transform: hover === data.id ? "scale(1.1)" : "scale(1)",
+            transition: "transform 0.3s ease",
+          }}
+          onMouseEnter={() => setHover(data.id)}
+          onMouseLeave={() => setHover(null)}
           variant="filled"
-          onClick={() => deleteData(record.id)}
+          onClick={() => deleteData(data.id)}
         >
-          <a>Delete</a>
+          Smazat
         </Button>
       ),
     },
@@ -126,7 +137,14 @@ export const ContractorList: React.FC = () => {
 
   const { styles } = tableStyle();
   return (
-    <>
+    <ConfigProvider
+      theme={{
+        algorithm:
+          themeWrapper === "dark"
+            ? theme.darkAlgorithm
+            : theme.defaultAlgorithm,
+      }}
+    >
       <h1>Seznam řemeslníků</h1>
       <Table<ContractorFields>
         className={styles.customTable}
@@ -135,6 +153,6 @@ export const ContractorList: React.FC = () => {
         pagination={{ pageSize: 10, position: ["bottomRight"] }}
         scroll={{ y: 55 * 40, x: 1000 }}
       />
-    </>
+    </ConfigProvider>
   );
 };
